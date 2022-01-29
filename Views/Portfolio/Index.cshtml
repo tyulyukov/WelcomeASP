@@ -1,0 +1,24 @@
+﻿@model IEnumerable<WelcomeASP.Data.Entities.Portfolio.PortfolioItem>
+
+@{
+    ViewData["Title"] = "Portfolio";
+    ViewData["ParallaxText"] = "Your portfolio";
+}
+
+<partial name="Asentus/Parallax" />
+
+<div class="text-center">
+    <h1 class="display-4">Its ur projects in porfolio: </h1>
+    @foreach (var item in Model)
+    {
+        <p>
+            @Html.DisplayFor(modelItem => item.Name)
+        </p>
+        <p>
+            @Html.DisplayFor(modelItem => item.Slug)
+        </p>
+        <p>
+            @Html.DisplayFor(modelItem => item.Category.Name)
+        </p>
+    }
+</div>

@@ -1,0 +1,23 @@
+﻿@model IEnumerable<WelcomeASP.Data.Entities.Faq>
+
+@{
+    ViewData["Title"] = "Index";
+    ViewData["ParallaxTitle"] = "F.A.Q";
+    ViewData["ParallaxText"] = "Some information";
+}
+
+<partial name="Asentus/Parallax" />
+
+<div class="text-center">
+    <h1 class="display-4">List of questions & asnwers: </h1>
+
+    @foreach (var item in Model)
+    {
+        <p>
+            @Html.DisplayFor(modelItem => item.Question)
+        </p>
+        <p>
+            @Html.DisplayFor(modelItem => item.Answer)
+        </p>
+    }
+</div>

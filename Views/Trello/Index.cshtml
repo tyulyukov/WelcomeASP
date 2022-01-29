@@ -1,0 +1,41 @@
+﻿@model IEnumerable<WelcomeASP.Data.Entities.Trello.Board>
+
+@{
+    ViewData["ParallaxTitle"] = "Trello";
+    ViewData["ParallaxText"] = "Trello Boards";
+}
+
+<partial name="Asentus/Parallax" />
+
+<div class="text-center" style="margin: 0 auto;">
+    <h1 class="display-4">Trello Boards</h1>
+
+    <div class="text-center" style="width: 1000px; display: flex; flex-wrap: wrap; margin: 0 auto;">
+        @foreach (var item in Model)
+        {
+            <div class="card" style="width: 100px; flex: 0 0 20%; margin: 10px;">
+                <div style="width: 100%; height: 100px; background-color: #868e96; padding: 25%;">
+                    <span>Trello board</span>
+                </div>
+                <div class="card-body">
+                    <a class="list-group-item list-group-item-action" aria-current="true" asp-controller="Trello" asp-action="ShowColumns" asp-route-id="@item.Id">
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="col-2" style="width: 40%; margin: 0 auto;">
+        <form asp-action="CreateBoard">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label class="control-label">Название доски</label>
+                <input name="Title" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,198 @@
+﻿@model IEnumerable<WelcomeASP.Data.Entities.Trello.Column>
+
+@{
+    ViewData["ParallaxTitle"] = "Trello Board";
+    ViewData["ParallaxText"] = "yours trello board";
+}
+
+<partial name="Asentus/Parallax" />
+
+<div>
+    <h1 class="display-4">Trello Boards</h1>
+
+    @foreach (var column in Model)
+    {
+        <div class="card-columns text-center" style="display: inline-block; max-width: 21rem;">
+            <div class="panel-title text-center" style="padding: 15px; background-color: lightslategray">
+                @Html.DisplayFor(Model => column.Title)
+                <button style="border-radius: 20px; margin: 0 auto;" class="btn btn-outline-info btn-sm" onclick="document.getElementById('modalDeleteColumn-@column.Id').style.display = 'block';">Удалить</button>
+            </div>
+
+            <!-- Модальный -->
+            <div id="modalDeleteColumn-@column.Id" class="modal">
+                <!-- Модальное содержание -->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="close" onclick="document.getElementById('modalDeleteColumn-@column.Id').style.display = 'none';">&times;</span>
+                        <h2>Удаление колонки "@column.Title"</h2>
+                    </div>
+                    <form asp-action="DeleteColumn">
+                        <div class="modal-body">
+                            <input type="hidden" name="id" value="@column.Id" />
+                            <input type="hidden" name="boardId" value="@ViewBag.BoardId" />
+
+                            <div class="form-group input-group-sm">
+                                <label class="control-label">Вы уверены, что хотите удалить эту колонку?</label>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="form-group">
+                                <input type="button" value="No, thanks" class="btn" onclick="document.getElementById('modalDeleteColumn-@column.Id').style.display = 'none';" />
+                                <input type="submit" value="Delete" class="btn btn-warning" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            @foreach (var card in column.Cards)
+            {
+                <div class="card" style="max-width: 21rem; display: table-row;">
+                    <div class="card-body" style="padding: 10px;">
+                        <h5 class="card-title">@Html.DisplayFor(Model => card.Title)</h5>
+                        <p class="card-text">@Html.DisplayFor(Model => card.Body)</p>
+                        <div style="display: table-row; width: 100%;">
+                            <button style="border-radius: 20px; margin: 0 auto;" class="btn btn-outline-info btn-sm" onclick="document.getElementById('modalDeleteCard-@card.Id').style.display = 'block';">Удалить</button>
+                        </div>
+
+                        <!-- Модальный -->
+                        <div id="modalDeleteCard-@card.Id" class="modal">
+                            <!-- Модальное содержание -->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <span class="close" onclick="document.getElementById('modalDeleteCard-@card.Id').style.display = 'none';">&times;</span>
+                                    <h2>Удаление карточки "@card.Title"</h2>
+                                </div>
+                                <form asp-action="DeleteCard">
+                                    <div class="modal-body">
+                                        <input type="hidden" name="id" value="@card.Id" />
+                                        <input type="hidden" name="boardId" value="@ViewBag.BoardId" />
+
+                                        <div class="form-group input-group-sm">
+                                            <label class="control-label">Вы уверены, что хотите удалить эту карточку?</label>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="form-group">
+                                            <input type="button" value="No, thanks" class="btn" onclick="document.getElementById('modalDeleteCard-@card.Id').style.display = 'none';" />
+                                            <input type="submit" value="Delete" class="btn btn-warning" />
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="width: 100%; height: 5px; margin: 5px 0; background-color: lightslategray"></div>
+            }
+
+            <div style="display: table-row; width: 100%;">
+                <!-- Триггер/Открыть модальный -->
+                <button style="border-radius: 20px; margin: 0 auto;" class="btn btn-outline-info" onclick="document.getElementById('myModal-@column.Id').style.display = 'block';">Создать</button>
+            </div>
+
+            <!-- Модальный -->
+            <div id="modalCreateCard-@column.Id" class="modal">
+                <!-- Модальное содержание -->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="close" onclick="document.getElementById('modalCreateCard-@column.Id').style.display = 'none';">&times;</span>
+                        <h2>Создание карточки в колонке "@column.Title"</h2>
+                    </div>
+                    <form asp-action="CreateCard">
+                        <div class="modal-body">
+                            <input type="hidden" name="boardId" value="@ViewBag.BoardId" />
+                            <input type="hidden" name="ColumnId" value="@column.Id" />
+
+                            <div class="form-group input-group-sm">
+                                <label class="control-label">Заголовок карточки</label>
+                                <input name="Title" class="form-control" />
+
+                                <label class="control-label">Тело карточки</label>
+                                <input name="Body" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="form-group">
+                                <input type="submit" value="Create" class="btn btn-default" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="card-columns text-center" style="display: inline-block; max-width: 21rem;">
+        <div class="panel-title text-center" style="padding: 5.5px; border: 5px solid lightslategray; ">
+            <button style="border-radius: 20px; margin: auto;" class="btn btn-outline-info" onclick="document.getElementById('modalCreateColumn').style.display = 'block';">Создать</button>
+
+            <!-- Модальный -->
+            <div id="modalCreateColumn" class="modal">
+                <!-- Модальное содержание -->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="close" onclick="document.getElementById('modalCreateColumn').style.display = 'none';">&times;</span>
+                        <h2>Создание колонки</h2>
+                    </div>
+                    <form asp-action="CreateColumn">
+                        <div class="modal-body">
+                            <input type="hidden" name="BoardId" value="@ViewBag.BoardId" />
+
+                            <div class="form-group">
+                                <label class="control-label">Заголовок колонки</label>
+                                <input name="Title" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="form-group">
+                                <input type="submit" value="Create" class="btn btn-default" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Модальный (фон) */
+    .modal {
+        display: none; /* Скрыто по умолчанию */
+        position: fixed; /* Оставаться на месте */
+        z-index: 1; /* Сидеть на вершине */
+        left: 0;
+        top: 0;
+        width: 100%; /* Полная ширина */
+        height: 100%; /* Полная высота */
+        /*overflow: auto; Включите прокрутку, если это необходимо */
+        background-color: rgb(0,0,0); /* Цвет запасной вариант */
+        background-color: rgba(0,0,0,0.4); /* Черный с непрозрачностью */
+    }
+
+    /* Модальное содержание/коробка */
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto; /* 15% сверху и по центру */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%; /* Может быть больше или меньше, в зависимости от размера экрана */
+    }
+
+    /* Кнопка закрытия */
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+</style>
